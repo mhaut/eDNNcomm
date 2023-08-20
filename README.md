@@ -3,7 +3,7 @@
 # Enhancing Distributed Neural Network Training through Node-Based Communications
 The Code for "Enhancing Distributed Neural Network Training through Node-Based Communications". [https://ieeexplore.ieee.org/]
 ```
-S. Moreno-Álvarez, M. E. Paoletti, G. Cavallaro and M. E. Paoletti.
+S. Moreno-Álvarez, M. E. Paoletti, G. Cavallaro and J. M. Haut.
 Enhancing Distributed Neural Network Training through Node-Based Communications.
 IEEE Transactions on Neural Networks and Learning Systems.
 DOI: ,
