@@ -59,7 +59,7 @@ parser.add_argument("--k", type=int, default=1, help="expansion factor")
 parser.add_argument("--sample_interval", type=int, default=400, help="interval between image sampling")
 opt = parser.parse_args()
 
-p = Replica(seed = opt.manualSeed)
+p = Replica(manualSeed = opt.manualSeed)
 device = p.device
 
 CONFIG = dict(parallel=dict(
