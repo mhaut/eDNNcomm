@@ -5,6 +5,8 @@ import argparse
 
 import torch
 
+import sys
+sys.path.append("/home/smoreno/ColossalAI/colossalai")
 import colossalai
 from colossalai.logging import disable_existing_loggers, get_dist_logger
 from colossalai.trainer import Trainer, hooks
