@@ -95,8 +95,8 @@ adversarial_loss = torch.nn.BCELoss().to(device)
 auxiliary_loss = torch.nn.CrossEntropyLoss().to(device)
 
 # Initialize weights
-generator.apply(aux.weights_init_normal)
-discriminator.apply(aux.weights_init_normal)
+generator.apply(models.weights_init_normal)
+discriminator.apply(models.weights_init_normal)
 
 # Optimizers
 optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
