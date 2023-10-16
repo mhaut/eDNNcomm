@@ -219,7 +219,7 @@ for epoch in range(opt.n_epochs):
             D_losses.append(d_loss)
             G_losses.append(g_loss)
     if rank == 0:
-        f = open("/tmp/mnist/GAN_"+str(opt.mode)+".txt", "a")
+        f = open("/tmp/GAN_"+str(opt.mode)+".txt", "a")
         f.write('[%d/%d]: loss_d: %.3f, loss_g: %.3f\n' % (
             (epoch), opt.n_epochs, torch.mean(torch.FloatTensor(D_losses)), torch.mean(torch.FloatTensor(G_losses))))
 
