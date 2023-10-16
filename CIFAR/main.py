@@ -59,7 +59,7 @@ def main(argsM, p, epochs, chunks):
 	#############################################################################################
 	# optionally resume from a checkpoint
 	if argsM.resume:
-		filename = '/tmp/'+argsM.mode+'/'+argsM.model+'/'+str(argsM.sharingiter)+'/checkpoint_' + str(int(os.environ['OMPI_COMM_WORLD_RANK'])) + '.pth.tar'
+		filename = '/tmp/checkpoint_' + str(int(os.environ['OMPI_COMM_WORLD_RANK'])) + '.pth.tar'
 		if os.path.isfile(filename):
 			print("=> loading checkpoint in device ", int(os.environ['OMPI_COMM_WORLD_RANK']))
 			checkpoint = torch.load(filename)

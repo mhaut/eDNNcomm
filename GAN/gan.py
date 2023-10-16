@@ -113,7 +113,7 @@ lr_scheduler_D = CosineAnnealingLR(optimizer_D, total_steps=opt.n_epochs)
 train_dataset = MNIST(
     root='/tmp/data',
     train=True,
-    download=True,
+    download=False,
     transform=transforms.Compose(
         [
             transforms.Resize(opt.img_size),
@@ -134,7 +134,7 @@ def sample_image(n_row, batches_done):
     labels = np.array([num for _ in range(n_row) for num in range(n_row)])
     labels = Variable(LongTensor(labels)).to(device)
     gen_imgs = generator(z, labels)
-    save_image(gen_imgs.data, "/tmp/images/"+str(opt.mode)+"/%d.png" % batches_done, nrow=n_row, normalize=True)
+    save_image(gen_imgs.data, "/tmp/"+str(opt.mode)+"/%d.png" % batches_done, nrow=n_row, normalize=True)
 
 
 engine_G, _, _, _ = colossalai.initialize(
@@ -187,7 +187,7 @@ for epoch in range(opt.n_epochs):
         g_loss = 0.5 * (adversarial_loss(validity, valid) + auxiliary_loss(pred_label, gen_labels))
         
         engine_G.backward(g_loss)
-        engine_G.step(epoch=epoch, mode=opt.mode)
+        engine_G.step(epoch=epoch)
 
         # ---------------------
         #  Train Discriminator
@@ -212,7 +212,7 @@ for epoch in range(opt.n_epochs):
         d_acc = np.mean(np.argmax(pred, axis=1) == gt)
 
         engine_D.backward(d_loss)
-        engine_D.step(epoch=epoch, mode=opt.mode)
+        engine_D.step(epoch=epoch)
 
         batches_done = epoch * len(train_dataloader) + i
         if rank == 0:
@@ -225,5 +225,5 @@ for epoch in range(opt.n_epochs):
 
         print('[%d/%d]: loss_d: %.3f, loss_g: %.3f' % (
             (epoch), opt.n_epochs, torch.mean(torch.FloatTensor(D_losses)), torch.mean(torch.FloatTensor(G_losses))))
-    engine_G._call_sharingPIX(opt.mode, hook_listG)
-    engine_D._call_sharingPIX(opt.mode, hook_listD)
+    engine_G._call_sharing(opt.mode, hook_listG)
+    engine_D._call_sharing(opt.mode, hook_listD)
