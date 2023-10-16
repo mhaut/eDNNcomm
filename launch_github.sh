@@ -107,7 +107,7 @@ for i in 5
 do
     # sbatch --nodes 2 -p volta --gpus-per-node=2 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m proposed -d CIFAR10 -s 50 -o resnet18
     if [ "$experiment" == "CIFAR" ]; then
-        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./CIFAR/main.py --manualSeed $seed --bsz 128 --epochs 400 --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd 5e-4 --sharingiter $sharing
+        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./CIFAR/main.py --manualSeed $seed --bsz 128 --epochs 400 --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd 5e-4 --sharingiter -1
     elif [ "$experiment" == "GAN" ]; then
         ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --nooversubscribe --mca hwloc_base_binding_policy=core -quiet python ./GAN/gan.py --mode $mode --manualSeed $seed --worldsize $numProcs
     elif [ "$experiment" == "IMAGENET" ]; then
