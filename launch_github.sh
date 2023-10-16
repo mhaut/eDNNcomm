@@ -109,7 +109,7 @@ do
     if [ "$experiment" == "CIFAR" ]; then
         ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./CIFAR/main.py --manualSeed $seed --bsz 128 --epochs 400 --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd 5e-4 --sharingiter -1
     elif [ "$experiment" == "GAN" ]; then
-        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --nooversubscribe --mca hwloc_base_binding_policy=core -quiet python ./GAN/gan.py --mode $mode --manualSeed $seed --worldsize $numProcs
+        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./GAN/gan.py --mode $mode --manualSeed $seed --worldsize $numProcs
     elif [ "$experiment" == "IMAGENET" ]; then
         ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python main.py --manualSeed $seed --bsz $bsz --epochs $epochs --mode $mode --worldsize $numProcs --dataset $dt --model $model --optim $optim --lr $lr --wd $wd --beta1 0.9 --beta2 0.999 --eps 1e-8 --weight_decouple True --when 70 80 --partition $partition --sharingiter $sharing
     fi
