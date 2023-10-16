@@ -128,7 +128,6 @@ if __name__ == '__main__':
 	parserM.add_argument('--pretrained', default=False, type=bool)
 	parserM.add_argument('--resume', default=False, type=bool)
 	parserM.add_argument('--wd', default=0, type=float, metavar='W', help='weight decay (default: 1e-4)')
-	parserM.add_argument('--eps', default=1e-8, type=float, help='eps in Adabelief')
 	parserM.add_argument('--beta1', default=0.9, type=float, help='beta1 in Adabelief')
 	parserM.add_argument('--beta2', default=0.999, type=float, help='beta2 in Adabelief')
 		    

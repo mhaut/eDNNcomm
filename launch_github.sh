@@ -21,7 +21,7 @@ export CUDA_VISIBLE_DEVICES="0,1,2,3"
 #1) Number of nodes; 2) hardware partition (maybe not required); 3) training mode (proposed); 4) batch_size; 5) number of epochs; 6) dataset (CIFAR10, CIFAR100, MNIST or IMAGENET); 7) K' hyperparameter; 8) model (r18, r34, r50, r101, shufflenet_v2_1x, vit_timm, vit, vit_small); 9) learning rate; 10) optimizer
 
 # .Parse named parameters using getopts
-while getopts ":n:p:m:b:e:d:s:o:l:r:z:w:" opt; do
+while getopts ":n:p:m:b:e:d:s:o:l:r:z:w:x:" opt; do
     case $opt in
         n) numNodes="$OPTARG";;
         p) partition="$OPTARG";;
@@ -35,6 +35,7 @@ while getopts ":n:p:m:b:e:d:s:o:l:r:z:w:" opt; do
         r) optim="$OPTARG";;
         z) seed="$OPTARG";;
         w) wd="$OPTARG";;
+        x) experiment="$OPTARG";;
         \?) echo "Invalid option: -$OPTARG" >&2;;
     esac
 done
@@ -104,7 +105,14 @@ numProcs=$rank_nr
 # .Execute the algorithm for 5 MonteCarlo runs. 
 for i in 5
 do
-    ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python /home/smoreno/ColossalAI/main6.py --manualSeed $seed --bsz $bsz --epochs $epochs --mode $mode --worldsize $numProcs --dataset $dt --model $model --optim $optim --lr $lr --wd $wd --beta1 0.9 --beta2 0.999 --eps 1e-8 --weight_decouple True --when 70 80 --partition $partition --sharingiter $sharing
+    if [ "$experiment" == "CIFAR10" ] || [ "$experiment" == "CIFAR100" ]; then
+        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./CIFAR/main.py --manualSeed $seed --bsz $bsz --epochs $epochs --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd $wd --partition $partition --sharingiter $sharing
+    if [ "$experiment" == "GAN" ]; then
+            mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --nooversubscribe --mca hwloc_base_binding_policy=core -quiet python ./GAN/gan.py --mode $mode --manualSeed 1 --worldsize $numProcs --iteration $i
+
+    elif [ "$experiment" == "IMAGENET" ]; then
+        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python main.py --manualSeed $seed --bsz $bsz --epochs $epochs --mode $mode --worldsize $numProcs --dataset $dt --model $model --optim $optim --lr $lr --wd $wd --beta1 0.9 --beta2 0.999 --eps 1e-8 --weight_decouple True --when 70 80 --partition $partition --sharingiter $sharing
+    fi
 done
 
 

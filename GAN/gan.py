@@ -43,7 +43,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--manualSeed', default=1111, type=int, help='random seed')
 parser.add_argument('--worldsize', default=1, type=int, help='number of processes') 
 parser.add_argument('--mode', default="1d", type=str, help='1d or proposed')
-parser.add_argument('--iteration', default=1, type=int, help='it number')
 parser.add_argument("--n_epochs", type=int, default=300, help="number of epochs of training")
 parser.add_argument("--batch_size", type=int, default=32, help="size of the batches")
 parser.add_argument("--lr", type=float, default=0.0002, help="adam: learning rate")
@@ -218,7 +217,7 @@ for epoch in range(opt.n_epochs):
             D_losses.append(d_loss)
             G_losses.append(g_loss)
     if rank == 0:
-        f = open("/tmp/mnist/GAN_"+str(opt.mode)+str(opt.iteration)+".txt", "a")
+        f = open("/tmp/mnist/GAN_"+str(opt.mode)+".txt", "a")
         f.write('[%d/%d]: loss_d: %.3f, loss_g: %.3f\n' % (
             (epoch), opt.n_epochs, torch.mean(torch.FloatTensor(D_losses)), torch.mean(torch.FloatTensor(G_losses))))
 
