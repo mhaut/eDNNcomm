@@ -113,8 +113,8 @@ def main(argsM, p, epochs, chunks):
 
 if __name__ == '__main__':
 	parserM = argparse.ArgumentParser(description='PyTorch ColossalAI Training')
-	parserM.add_argument('--balanced', default=1, type=int, help='balance')    
-	parserM.add_argument('--dataset', default="CIFAR10", type=str, help='dataset')    
+	parserM.add_argument('--balanced', default=1, type=int, help='balance')
+	parserM.add_argument('--dataset', default="CIFAR10", type=str, help='dataset')
 	parserM.add_argument('--manualSeed', default=1111, type=int, help='random seed')
 	parserM.add_argument('--mode', default="1d", type=str, help='1d or proposed')
 	parserM.add_argument('--lr', default=0.1, type=float)
@@ -125,7 +125,7 @@ if __name__ == '__main__':
 	parserM.add_argument('--speeds', default="0", type=str, help='processes speed')
 	parserM.add_argument('--worldsize', default=1, type=int, help='number of processes')
 	parserM.add_argument('--sharing', default=1, type=int, help='global communication epochs')
-	parserM.add_argument('--sharingiter', default=50, type=int, help='global communication iters')
+	parserM.add_argument('--sharingiter', default=-1, type=int, help='global communication iters [automode = -1 (1 per epoch)]')
 	parserM.add_argument('--withkfac', default='no', type=str, help='yes(True)/no(False)')
 	parserM.add_argument('--model', default='r101', type=str, help='resnet model)')
 	parserM.add_argument('--size', default="32", type=int)
@@ -134,9 +134,13 @@ if __name__ == '__main__':
 	parserM.add_argument('--wd', default=0, type=float, metavar='W', help='weight decay (default: 1e-4)')
 	parserM.add_argument('--beta1', default=0.9, type=float, help='beta1 in Adabelief')
 	parserM.add_argument('--beta2', default=0.999, type=float, help='beta2 in Adabelief')
-		    
-
 	argsM = parserM.parse_args()
+
+
+	if argsM.sharingiter == -1:
+		argsM.sharingiter = 50000 // (argsM.bsz * argsM.worldsize)
+		if 50000 % (argsM.bsz * argsM.worldsize) != 0: argsM.sharingiter += 1
+
 	p = Replica(argsM=argsM)
 	CONFIG = dict(parallel=dict(
 		data=dict(size=argsM.worldsize, mode=argsM.mode),
