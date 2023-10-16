@@ -11,7 +11,7 @@ from torchvision.datasets import MNIST
 from torchvision.utils import save_image
 
 import sys
-sys.path.append("/home/smoreno/ColossalAI/colossalai")
+sys.path.append("/home/smoreno/ColossalAI/")
 import colossalai
 from colossalai.logging import get_dist_logger
 from colossalai.utils import get_dataloader
