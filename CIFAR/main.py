@@ -11,6 +11,7 @@ import colossalai
 from colossalai.logging import disable_existing_loggers, get_dist_logger
 from colossalai.trainer import Trainer, hooks
 from colossalai.utils import MultiTimer
+from colossalai.engine.schedule import NonPipelineSchedule
 
 import aux
 
