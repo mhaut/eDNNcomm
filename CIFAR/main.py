@@ -12,6 +12,7 @@ from colossalai.logging import disable_existing_loggers, get_dist_logger
 from colossalai.trainer import Trainer, hooks
 from colossalai.utils import MultiTimer
 
+import aux
 
 
 
