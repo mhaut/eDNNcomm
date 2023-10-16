@@ -8,7 +8,7 @@ DOI: 10.1109/TNNLS.2023.3309735,
 September 2023.
 ```
 
-![EDNNCOM](./images/EDNNCOM.jpg)
+![EDNNCOM](./images/EDNNCOM.png)
 
 
 

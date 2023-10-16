@@ -157,6 +157,8 @@ for epoch in range(opt.n_epochs):
     start = time.time()
     D_losses, G_losses = [], []
     for i, (imgs, labels) in enumerate(train_dataloader):
+        if rank == 0:
+            print("-------->", i, "de", len(train_dataloader))
         batch_size = imgs.shape[0]
 
         # Adversarial ground truths
