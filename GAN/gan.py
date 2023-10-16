@@ -227,5 +227,5 @@ for epoch in range(opt.n_epochs):
 
         print('[%d/%d]: loss_d: %.3f, loss_g: %.3f' % (
             (epoch), opt.n_epochs, torch.mean(torch.FloatTensor(D_losses)), torch.mean(torch.FloatTensor(G_losses))))
-    engine_G._call_sharing(opt.mode, hook_listG)
-    engine_D._call_sharing(opt.mode, hook_listD)
+    engine_G._call_sharingPIX(opt.mode, hook_listG)
+    engine_D._call_sharingPIX(opt.mode, hook_listD)
