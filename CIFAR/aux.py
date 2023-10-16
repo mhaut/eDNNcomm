@@ -8,14 +8,14 @@ from models import *
 
 
 def get_model(args, Num_classes):
-	if   args.model == 'v16':  net = VGGCIFAR('VGG16',   Num_classes=Num_classes)
-	elif args.model == 'r18':  net = ResNet18(           Num_classes=Num_classes)
-	elif args.model == 'r34':  net = ResNet34(           Num_classes=Num_classes)
-	elif args.model == 'r50':  net = ResNet50(           Num_classes=Num_classes)
-	elif args.model == 'r101': net = ResNet101(          Num_classes=Num_classes)
-	elif args.model == 'rx29': net = ResNeXt29_4x64d(    Num_classes=Num_classes)
-	elif args.model == 'dla':  net = DLA(                Num_classes=Num_classes)
-	elif args.model == 'd121': net = DenseNet121(        Num_classes=Num_classes)
+	if   args.model == 'vgg16':       net = VGGCIFAR('VGG16',   Num_classes=Num_classes)
+	elif args.model == 'resnet18':    net = ResNet18(           Num_classes=Num_classes)
+	elif args.model == 'resnet34':    net = ResNet34(           Num_classes=Num_classes)
+	elif args.model == 'resnet50':    net = ResNet50(           Num_classes=Num_classes)
+	elif args.model == 'resnet101':   net = ResNet101(          Num_classes=Num_classes)
+	elif args.model == 'resnext29':   net = ResNeXt29_4x64d(    Num_classes=Num_classes)
+	elif args.model == 'dla':         net = DLA(                Num_classes=Num_classes)
+	elif args.model == 'densenet121': net = DenseNet121(        Num_classes=Num_classes)
 	return net
 
 
