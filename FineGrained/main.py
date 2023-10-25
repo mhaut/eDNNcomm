@@ -103,7 +103,8 @@ if __name__ == '__main__':
     parserM.add_argument('--wd', '--weight-decay', default=1e-4, type=float,
                     metavar='W', help='weight decay (default: 1e-4)',
                     dest='weight_decay')
-    parserM.add_argument('--datadir', type=str, help='path to dataset')
+    parserM.add_argument('--datadir', default='./data/', type=str,
+                        help='path to dataset')
 
     argsM = parserM.parse_args()
     p = Replica(argsM=argsM)
