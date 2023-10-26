@@ -105,16 +105,21 @@ numProcs=$rank_nr
 # .Execute the algorithm for 5 MonteCarlo runs. 
 for i in 5
 do
-#     sbatch --nodes 2 -p volta --gpus-per-node=2 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m proposed -d CIFAR10 -s 50 -o resnet18
     if [ "$experiment" == "CIFAR" ]; then
+#        sbatch --nodes 2 -p volta --gpus-per-node=2 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m proposed -x CIFAR -d CIFAR10 -s 50 -o resnet18
         ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./CIFAR/main.py --manualSeed $seed --bsz 128 --epochs 400 --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd 5e-4 --sharingiter -1
-#     sbatch --nodes 2 -p volta --gpus-per-node=2 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m proposed -x GAN -z 3333
+    if [ "$experiment" == "OPTIMIZERS" ]; then
+#        sbatch --nodes 2 -p volta --gpus-per-node=2 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m proposed -x OPTIMIZERS -d CIFAR10 -s 50 -o resnet50 -r adam
+        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./CIFAR/main.py --manualSeed $seed --bsz 128 --epochs 400 --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd 5e-4 --sharingiter -1
     elif [ "$experiment" == "GAN" ]; then
+#        sbatch --nodes 2 -p volta --gpus-per-node=2 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m proposed -x GAN -z 3333
         ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./GAN/gan.py --mode $mode --manualSeed $seed --worldsize $numProcs
     elif [ "$experiment" == "FINEGRAINED" ]; then
+#        sbatch --nodes 2 -p volta --gpus-per-node=4 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m 1d -x FINEGRAINED -z 3333 -o resnet18 -d cub
         ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./FINEGRAINED/main.py --manualSeed $seed --epochs 100 --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd 5e-4 --sharingiter -1
     elif [ "$experiment" == "IMAGENET" ]; then
-        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python main.py --manualSeed $seed --bsz $bsz --epochs $epochs --mode $mode --worldsize $numProcs --dataset $dt --model $model --optim $optim --lr $lr --wd $wd --beta1 0.9 --beta2 0.999 --eps 1e-8 --weight_decouple True --when 70 80 --partition $partition --sharingiter $sharing
+#        sbatch --nodes 2 -p volta --gpus-per-node=4 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m 1d -x IMAGENET -z 3333 -o resnet18
+        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./IMAGENET/main.py --manualSeed $seed --bsz 256 --epochs 90 --mode $mode --worldsize $numProcs --model $model --lr 0.1 --wd 1e-4 --sharingiter 50
     fi
 done
 

@@ -149,3 +149,18 @@ def build_cifar10(argsM):
 	test_dataloader  = get_dataloader(dataset=test_dataset, batch_size=argsM.bsz, pin_memory=True, seed=1024*argsM.manualSeed)
 	relative_speeds = None
 	return train_dataloader, test_dataloader, relative_speeds
+
+
+def get_optim(net, args):
+    if   args.optim == 'sgd':            optimizer = torch.optim.SGD(     net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.wd)
+    elif args.optim == 'rmsprop':        optimizer = torch.optim.RMSprop( net.parameters(), lr=args.lr)
+    elif args.optim == 'adam':           optimizer = torch.optim.Adam(    net.parameters(), lr=args.lr, weight_decay = args.wd)
+    elif args.optim == 'adamw':          optimizer = torch.optim.AdamW(   net.parameters(), lr=args.lr, weight_decay = args.wd)
+    elif args.optim == 'diffgrad':        optimizer = diffgrad(       net.parameters(), lr=args.lr)
+    #elif optim_name == 'adabelief':      optimizer = AdaBelief(     net.parameters(), lr=args.lr)
+    elif args.optim == 'adabelief':      optimizer = AdaBelief(net.parameters(), lr=args.lr, betas=(args.beta1, args.beta2), eps=args.eps, weight_decouple = args.weight_decouple, weight_decay = args.wd, fixed_decay = args.fixed_decay, rectify=False)
+    elif args.optim == 'cosangulargrad': optimizer = cosangulargrad(net.parameters(), lr=args.lr)
+    else:
+        print('==> Optimizer not found...')
+        exit()
+    return optimizer
