@@ -1,6 +1,8 @@
 import os
 import random
 import torch
+import argparse
+import time
 
 import sys
 sys.path.append("/home/smoreno/ColossalAI/")
@@ -9,6 +11,9 @@ from colossalai.logging import disable_existing_loggers, get_dist_logger
 from colossalai.trainer import Trainer, hooks
 from colossalai.utils import MultiTimer
 from colossalai.engine.schedule import NonPipelineSchedule
+import colossalai.nn as col_nn
+
+import torch.nn as nn
 
 import aux
 
@@ -55,9 +60,8 @@ def main(argsM, p, epochs):
 
     optimizer = torch.optim.SGD(model.parameters(), argsM.lr, momentum=argsM.momentum, weight_decay=argsM.weight_decay)
     lr_scheduler  = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[50, 80], gamma=0.1)
-
-
-    engine, _, _, _ = colossalai.initialize(model, optimizer, criterion, train_dataloader, test_dataloader, lr_scheduler, sharing = argsM.sharing, algorithm = argsM.mode, speeds=speeds, balanced=argsM.balanced, device=device)
+    
+    engine, _, _, _ = colossalai.initialize(model, optimizer, criterion, train_dataloader, test_dataloader, lr_scheduler, sharing = argsM.sharingiter, algorithm = argsM.mode, speeds=speeds, balanced=argsM.balanced, device=device)
     timer = MultiTimer()
     schedule = NonPipelineSchedule()
     trainer = Trainer(engine=engine, timer=timer, schedule=schedule, logger=logger)
@@ -72,12 +76,14 @@ def main(argsM, p, epochs):
 
     start = time.time()
     trainer.fit(train_dataloader=train_dataloader,
-                epochs=epochs,
-                test_dataloader=test_dataloader,
-                test_interval=1,
-                hooks=hook_list,
-                device=device,
-                display_progress=False)
+				epochs=epochs,
+				args=argsM,
+				sharingiter=argsM.sharingiter,
+				test_dataloader=test_dataloader,
+				test_interval=1,
+				hooks=hook_list,
+				device=device,
+				display_progress=False)
 
     print("Tiempo: ", time.time()-start)
 
@@ -93,6 +99,7 @@ if __name__ == '__main__':
     parserM.add_argument('--speeds', default="0", type=str, help='processes speed')
     parserM.add_argument('--worldsize', default=1, type=int, help='number of processes')
     parserM.add_argument('--sharing', default=5, type=int, help='global communication epochs')
+    parserM.add_argument('--sharingiter', default=-1, type=int, help='global communication iters [automode = -1 (1 per epoch)]')
     parserM.add_argument('--model', default='r50p', type=str, help='resnet model)')
     parserM.add_argument('--pretrained', action='store_true')
     parserM.add_argument('--bsz', default=64, type=int, help='batch size')

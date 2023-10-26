@@ -3,6 +3,9 @@ import os
 import torch.nn as nn
 import torchvision.models as models
 import torchvision.datasets as datasets
+import torchvision.transforms as transforms
+
+from colossalai.utils import get_dataloader
 
 
 def get_model(args, out_size):
@@ -29,7 +32,7 @@ def get_model(args, out_size):
 
 def build_fg_loader(argsM):
     subpath = {'cub':'CUB_200_2011','cars':'Car196','fgvc':'fgvc_aricraft','dogs':'StanfordDogs'}
-    argsM.datadir += subpath[argsM.dataset])
+    argsM.datadir += subpath[argsM.dataset]
 
     traindir  = os.path.join(argsM.datadir, 'train')
     valdir    = os.path.join(argsM.datadir, 'val')

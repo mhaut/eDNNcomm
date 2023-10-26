@@ -19,7 +19,6 @@ from colossalai.trainer import hooks
 from colossalai.nn.lr_scheduler import CosineAnnealingLR
 
 import models
-import aux
 
 
 # Define Replica
@@ -111,9 +110,9 @@ lr_scheduler_D = CosineAnnealingLR(optimizer_D, total_steps=opt.n_epochs)
 
 # build datasets
 train_dataset = MNIST(
-    root='/tmp/data',
+    root='/home/smoreno/data',
     train=True,
-    download=False,
+    download=True,
     transform=transforms.Compose(
         [
             transforms.Resize(opt.img_size),
@@ -149,7 +148,6 @@ hook_listD = [hooks.LRSchedulerHook(lr_scheduler_D, by_epoch=True)]
 
 
 
-
 # ----------
 #  Training
 # ----------
@@ -157,11 +155,9 @@ for epoch in range(opt.n_epochs):
     start = time.time()
     D_losses, G_losses = [], []
     for i, (imgs, labels) in enumerate(train_dataloader):
-        if rank == 0:
-            print("-------->", i, "de", len(train_dataloader))
-        batch_size = imgs.shape[0]
 
         # Adversarial ground truths
+        batch_size = imgs.shape[0]
         valid = Variable(FloatTensor(batch_size, 1).fill_(1.0), requires_grad=False).to(device)
         fake = Variable(FloatTensor(batch_size, 1).fill_(0.0), requires_grad=False).to(device)
 
@@ -224,8 +220,10 @@ for epoch in range(opt.n_epochs):
         f = open("/tmp/GAN_"+str(opt.mode)+".txt", "a")
         f.write('[%d/%d]: loss_d: %.3f, loss_g: %.3f\n' % (
             (epoch), opt.n_epochs, torch.mean(torch.FloatTensor(D_losses)), torch.mean(torch.FloatTensor(G_losses))))
+        f.close()
 
         print('[%d/%d]: loss_d: %.3f, loss_g: %.3f' % (
             (epoch), opt.n_epochs, torch.mean(torch.FloatTensor(D_losses)), torch.mean(torch.FloatTensor(G_losses))))
-    engine_G._call_sharingPIX(opt.mode, hook_listG)
-    engine_D._call_sharingPIX(opt.mode, hook_listD)
+    engine_G._call_sharing(opt.mode, hooks=hook_listG)
+    engine_D._call_sharing(opt.mode, hooks=hook_listD)
+ 

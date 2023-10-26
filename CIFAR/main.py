@@ -75,7 +75,7 @@ def main(argsM, p, epochs, chunks):
 		argsM.start_epoch = 0
 		
 	lr_scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=argsM.epochs)
-
+	
 	engine, _, _, _ = colossalai.initialize(model, optimizer, criterion, train_dataloader, test_dataloader, lr_scheduler, sharing = argsM.sharingiter, algorithm = argsM.mode, speeds=speeds, balanced=argsM.balanced, device=device)
 	timer = MultiTimer()
 	schedule = NonPipelineSchedule()
@@ -124,7 +124,6 @@ if __name__ == '__main__':
 	parserM.add_argument('--chunks', default=1, type=int, help='pipeline chinks')
 	parserM.add_argument('--speeds', default="0", type=str, help='processes speed')
 	parserM.add_argument('--worldsize', default=1, type=int, help='number of processes')
-	parserM.add_argument('--sharing', default=1, type=int, help='global communication epochs')
 	parserM.add_argument('--sharingiter', default=-1, type=int, help='global communication iters [automode = -1 (1 per epoch)]')
 	parserM.add_argument('--withkfac', default='no', type=str, help='yes(True)/no(False)')
 	parserM.add_argument('--model', default='r101', type=str, help='resnet model)')
