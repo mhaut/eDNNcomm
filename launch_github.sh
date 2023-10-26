@@ -110,7 +110,7 @@ do
         ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./CIFAR/main.py --manualSeed $seed --bsz 128 --epochs 400 --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd 5e-4 --sharingiter -1
     if [ "$experiment" == "OPTIMIZERS" ]; then
 #        sbatch --nodes 2 -p volta --gpus-per-node=2 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m proposed -x OPTIMIZERS -d CIFAR10 -s 50 -o resnet50 -r adam
-        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./CIFAR/main.py --manualSeed $seed --bsz 128 --epochs 400 --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd 5e-4 --sharingiter -1
+        ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./OPTIMIZERS/main.py --manualSeed $seed --bsz 128 --epochs 400 --mode $mode --worldsize $numProcs --dataset $dt --model $model --lr 0.1 --wd 5e-4 --sharingiter -1
     elif [ "$experiment" == "GAN" ]; then
 #        sbatch --nodes 2 -p volta --gpus-per-node=2 -t 02:00:00 ./launch_github.sh -n 2 -p volta -m proposed -x GAN -z 3333
         ~/mpi_install/bin/mpirun -n $numProcs --rankfile $RANKFILE --mca btl tcp,self,vader --mca pml ob1 -report-bindings --display-map --bind-to core --oversubscribe -quiet python ./GAN/gan.py --mode $mode --manualSeed $seed --worldsize $numProcs
